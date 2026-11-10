@@ -1,0 +1,9 @@
+KIỂM TRA GIỮA KỲ THỊ GIÁC MÁY TÍNH
+Thời gian: 30 phút
+Câu 1 (5 điểm) Đọc ảnh và thực hiện các thao tác sau:
+- Thay đổi kích thước ảnh với hệ số tỉ lệ trục x và trục y nhập vào từ bàn phím
+- Biến đổi ảnh và cắt thành ảnh âm bản
+- Tách biên ảnh bằng phương pháp Canny
+- Tạo trackbar để lấy kích thước cho kernel.
+- Sử dụng bộ lọc trung bình để lọc ảnh với kích thước bộ lọc lấy từ trackbar
+- Ấn phím C để lưu lại ảnh kết quả

@@ -1,0 +1,81 @@
+{
+  "documents_evaluated": 4,
+  "mean_raw_cer": 0.122,
+  "mean_normalized_cer": 0.122,
+  "mean_reading_order_accuracy": 1.0,
+  "mean_line_grouping_accuracy": 0.7278,
+  "results": [
+    {
+      "image": "fixture_colored_paper.png",
+      "raw_ocr": {
+        "cer": 0.1053,
+        "wer": 0.4545
+      },
+      "normalized_ocr": {
+        "cer": 0.1053,
+        "wer": 0.4545
+      },
+      "corrected_ocr": {
+        "cer": 0.0789,
+        "wer": 0.3409
+      },
+      "reading_order_accuracy": 1.0,
+      "line_grouping_accuracy": 0.8,
+      "selected_candidate": "original"
+    },
+    {
+      "image": "fixture_skewed.png",
+      "raw_ocr": {
+        "cer": 0.12,
+        "wer": 0.5556
+      },
+      "normalized_ocr": {
+        "cer": 0.12,
+        "wer": 0.5556
+      },
+      "corrected_ocr": {
+        "cer": 0.1086,
+        "wer": 0.4722
+      },
+      "reading_order_accuracy": 1.0,
+      "line_grouping_accuracy": 1.0,
+      "selected_candidate": "original"
+    },
+    {
+      "image": "fixture_noisy.png",
+      "raw_ocr": {
+        "cer": 0.1278,
+        "wer": 0.6154
+      },
+      "normalized_ocr": {
+        "cer": 0.1278,
+        "wer": 0.6154
+      },
+      "corrected_ocr": {
+        "cer": 0.1278,
+        "wer": 0.6154
+      },
+      "reading_order_accuracy": 1.0,
+      "line_grouping_accuracy": 0.3333,
+      "selected_candidate": "original"
+    },
+    {
+      "image": "fixture_exam_cv.png",
+      "raw_ocr": {
+        "cer": 0.1351,
+        "wer": 0.5347
+      },
+      "normalized_ocr": {
+        "cer": 0.1351,
+        "wer": 0.5347
+      },
+      "corrected_ocr": {
+        "cer": 0.1043,
+        "wer": 0.396
+      },
+      "reading_order_accuracy": 1.0,
+      "line_grouping_accuracy": 0.7778,
+      "selected_candidate": "original"
+    }
+  ]
+}

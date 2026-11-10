@@ -1,0 +1,3 @@
+HƯỚNG DẪN THỰC HÀNH PADDLEOCR
+Kiểm tra độ chính xác nhận dạng văn bản tiếng Việt.
+Bảo toàn các dấu thanh: sắc, huyền, hỏi, ngã, nặng.

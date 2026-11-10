@@ -1,0 +1,5 @@
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+THÔNG BÁO VỀ KỲ THI THỊ GIÁC MÁY TÍNH
+Thời gian thi chính thức: 45 phút
+Thí sinh sử dụng Python và OpenCV để thực hiện bài thi.

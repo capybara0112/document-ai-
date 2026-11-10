@@ -1,0 +1,32 @@
+{
+  "status": "COMPLETED",
+  "best_epoch": 3,
+  "best_accuracy": 0.925,
+  "total_epochs": 3,
+  "duration_seconds": 0.0,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.45,
+      "val_acc": 0.875,
+      "val_cer": 0.128,
+      "is_best": true
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3182,
+      "val_acc": 0.9,
+      "val_cer": 0.106,
+      "is_best": true
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.2598,
+      "val_acc": 0.925,
+      "val_cer": 0.084,
+      "is_best": true
+    }
+  ],
+  "config_path": "output\\rec_vietnamese_v6\\active_config.yml",
+  "checkpoint_dir": "output\\rec_vietnamese_v6"
+}

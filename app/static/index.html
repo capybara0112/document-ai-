@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document AI Engine - Trích xuất & OCR Tài liệu Tiếng Việt Thông Minh</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #818cf8;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), #818cf8);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+    .logo-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-title p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .badge-tag {
+      font-size: 0.7rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Upload & Control Card */
+    .control-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      background: #fafcff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--primary);
+      background: #f5f7ff;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.08);
+    }
+    .dropzone input[type="file"] {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .dropzone-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 0.75rem;
+      color: var(--primary);
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dropzone-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+    .dropzone-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .format-pills {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .format-pill {
+      font-size: 0.72rem;
+      background: #f1f5f9;
+      color: #475569;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Selected File Bar */
+    .selected-file-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .selected-file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .selected-thumb {
+      width: 42px;
+      height: 42px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #e2e8f0;
+    }
+    .selected-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .selected-size {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Quick Demo Samples */
+    .demo-samples {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .demo-btn {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .demo-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+
+    /* Options & Run Bar */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      align-items: flex-end;
+    }
+    @media (max-width: 860px) {
+      .action-grid { grid-template-columns: 1fr; }
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 0.35rem;
+    }
+    .segmented-control {
+      display: flex;
+      background: #f1f5f9;
+      padding: 0.25rem;
+      border-radius: 8px;
+      gap: 0.25rem;
+    }
+    .segmented-btn {
+      flex: 1;
+      padding: 0.45rem 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      color: #64748b;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .segmented-btn.active {
+      background: white;
+      color: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .custom-select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      background: white;
+      color: var(--text-main);
+      outline: none;
+    }
+    .custom-select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.6rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+      height: 42px;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Results Workspace */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 980px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 580px;
+    }
+    .panel-header {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafbfc;
+    }
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Left Pane: Image Viewer */
+    .viewer-body {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      position: relative;
+      overflow: auto;
+    }
+    .canvas-container {
+      position: relative;
+      max-width: 100%;
+      max-height: 520px;
+      display: inline-block;
+      box-shadow: var(--shadow-md);
+      border-radius: 6px;
+      background: white;
+    }
+    #previewImg {
+      max-width: 100%;
+      max-height: 520px;
+      display: block;
+      border-radius: 6px;
+    }
+    #bboxOverlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .viewer-placeholder {
+      color: var(--text-muted);
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    /* Right Pane: Tabbed Results */
+    .tab-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #64748b;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover {
+      color: var(--primary);
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      font-weight: 600;
+      border-bottom-color: var(--primary);
+      background: white;
+    }
+
+    .tab-content {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      max-height: 520px;
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Tab 1: Text Display */
+    .text-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      color: #1e293b;
+      min-height: 300px;
+    }
+    .text-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .stat-badge {
+      font-size: 0.75rem;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* Tab 2: Reading Order List */
+    .block-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .block-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 0.9rem;
+      background: white;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .block-item:hover, .block-item.highlighted {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+      background: #fafcff;
+    }
+    .block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.35rem;
+    }
+    .block-idx {
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+    }
+    .block-type {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+    .block-conf {
+      font-size: 0.75rem;
+      color: var(--success);
+      font-weight: 600;
+    }
+    .block-text {
+      font-size: 0.88rem;
+      color: var(--text-main);
+    }
+
+    /* Tab 3: Vietnamese Corrections */
+    .correction-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+    .correction-table th, .correction-table td {
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+    }
+    .correction-table th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #334155;
+    }
+    .correction-orig {
+      color: var(--danger);
+      text-decoration: line-through;
+    }
+    .correction-fixed {
+      color: var(--success);
+      font-weight: 600;
+    }
+    .entity-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      margin: 0.2rem;
+      font-weight: 500;
+    }
+
+    /* Tab 4: Diagnostics */
+    .diag-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .diag-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+    .diag-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+    .diag-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Downloads Bar */
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .download-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      background: white;
+      transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .download-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .download-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .download-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .download-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0f172a;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      z-index: 999;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo-group">
+        <div class="logo-icon">AI</div>
+        <div class="logo-title">
+          <h1>Document AI Engine <span class="badge-tag">v2.0 Vietnamese</span></h1>
+          <p>PaddleOCR PP-OCRv6 • Layout Analysis • AI Diacritics Correction</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="/docs" target="_blank" class="btn-secondary" title="Xem tài liệu API Swagger">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Swagger API (/docs)
+        </a>
+        <a href="/health" target="_blank" class="btn-secondary">
+          <span style="display:inline-block;width:8px;height:8px;background:var(--success);border-radius:50%;"></span>
+          Health Check
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Upload Control Card -->
+    <div class="control-card">
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.tif,.tiff,.bmp,.pdf,.docx,.xlsx">
+        <div class="dropzone-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="dropzone-title">Kéo & Thả tài liệu hoặc Click để chọn file</div>
+        <div class="dropzone-subtitle">Hỗ trợ nhận diện chữ tiếng Việt, hóa đơn VAT, đề thi, bảng biểu và báo cáo tài chính</div>
+        <div class="format-pills">
+          <span class="format-pill">PNG</span>
+          <span class="format-pill">JPG / JPEG</span>
+          <span class="format-pill">TIFF / TIF</span>
+          <span class="format-pill">BMP</span>
+          <span class="format-pill">PDF</span>
+          <span class="format-pill">DOCX</span>
+          <span class="format-pill">XLSX</span>
+          <span class="format-pill">Max 25MB</span>
+        </div>
+      </div>
+
+      <!-- Selected File Info -->
+      <div class="selected-file-bar" id="selectedFileBar">
+        <div class="selected-file-info">
+          <img id="selectedThumb" class="selected-thumb" src="" alt="Thumbnail">
+          <div>
+            <div class="selected-name" id="selectedFileName">document.png</div>
+            <div class="selected-size" id="selectedFileSize">0 KB</div>
+          </div>
+        </div>
+        <button class="btn-secondary" id="clearFileBtn">Đổi file khác</button>
+      </div>
+
+      <!-- Quick Demo Samples -->
+      <div class="demo-samples">
+        <span>Thử nhanh mẫu có sẵn:</span>
+        <button class="demo-btn" onclick="loadSample('fixture_exam_cv.png')">📄 Đề thi Thị giác máy tính</button>
+        <button class="demo-btn" onclick="loadSample('fixture_colored_paper.png')">📄 Tài liệu giấy màu</button>
+        <button class="demo-btn" onclick="loadSample('fixture_skewed.png')">📄 Tài liệu chụp nghiêng</button>
+      </div>
+
+      <!-- Action & Parameter Controls -->
+      <div class="action-grid">
+        <div class="form-group">
+          <label>Chế độ xử lý:</label>
+          <div class="segmented-control">
+            <button class="segmented-btn active" data-mode="analyze" onclick="setMode('analyze')">🔍 Phân tích toàn diện</button>
+            <button class="segmented-btn" data-mode="DOCX" onclick="setMode('DOCX')">📄 Xuất Word (.docx)</button>
+            <button class="segmented-btn" data-mode="XLSX" onclick="setMode('XLSX')">📊 Xuất Excel (.xlsx)</button>
+            <button class="segmented-btn" data-mode="PDF" onclick="setMode('PDF')">📑 Xuất PDF (.pdf)</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taskTypeSelect">Loại tài liệu (Task Type):</label>
+          <select id="taskTypeSelect" class="custom-select">
+            <option value="AUTO">AUTO (Tự động phát hiện)</option>
+            <option value="INVOICE">INVOICE (Hóa đơn VAT)</option>
+            <option value="FINANCIAL_REPORT">FINANCIAL_REPORT (Báo cáo tài chính)</option>
+            <option value="GENERAL">GENERAL (Đề thi / Tài liệu chung)</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" id="processBtn" onclick="processDocument()">
+          <span id="btnIcon">🚀</span>
+          <span id="btnText">Bắt đầu xử lý</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Workspace -->
+    <div class="workspace-grid" id="workspaceGrid" style="display: none;">
+      <!-- Left: Image Viewer & BBox Canvas -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Tài liệu gốc
+          </div>
+          <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+            <input type="checkbox" id="toggleBBox" checked onchange="drawBBoxes()">
+            Hiện hộp nhận dạng (Bounding Boxes)
+          </label>
+        </div>
+        <div class="viewer-body">
+          <div class="canvas-container" id="canvasContainer">
+            <img id="previewImg" src="" alt="Document Preview">
+            <canvas id="bboxOverlay"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Structured Results Tabs -->
+      <div class="panel-card">
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="switchTab('tabText')">📝 Văn bản đã khôi phục</button>
+          <button class="tab-btn" onclick="switchTab('tabOrder')">📐 Thứ tự đọc & Khối</button>
+          <button class="tab-btn" onclick="switchTab('tabVi')">🇻🇳 Sửa dấu & Thực thể</button>
+          <button class="tab-btn" onclick="switchTab('tabQuality')">📊 Chất lượng ảnh A-E</button>
+          <button class="tab-btn" onclick="switchTab('tabRaw')">📦 JSON thô</button>
+        </div>
+
+        <!-- Tab 1: Corrected Text -->
+        <div class="tab-content active" id="tabText">
+          <div class="text-toolbar">
+            <div style="display:flex;gap:0.4rem;align-items:center;">
+              <span class="stat-badge" id="statTime">0 ms</span>
+              <span class="stat-badge" id="statWords">0 từ</span>
+              <span class="stat-badge" id="statCandidate">original</span>
+            </div>
+            <button class="btn-secondary" onclick="copyText()">📋 Sao chép</button>
+          </div>
+          <div class="text-box" id="correctedTextBox">Đang chờ xử lý...</div>
+        </div>
+
+        <!-- Tab 2: Reading Order -->
+        <div class="tab-content" id="tabOrder">
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;">
+            Thứ tự đọc logic từ trên xuống dưới (đã xử lý header banner và tránh phân cột nhầm):
+          </div>
+          <div class="block-list" id="blockList"></div>
+        </div>
+
+        <!-- Tab 3: Vietnamese Corrections -->
+        <div class="tab-content" id="tabVi">
+          <h4 style="font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Từ vựng OCR tiếng Việt đã tự động sửa dấu:</h4>
+          <table class="correction-table" id="correctionsTable">
+            <thead>
+              <tr>
+                <th>Từ gốc (Raw OCR)</th>
+                <th>Chuẩn hóa</th>
+                <th>Lý do</th>
+              </tr>
+            </thead>
+            <tbody id="correctionsTableBody">
+              <tr><td colspan="3" style="text-align:center;color:var(--text-muted);">Không có từ nào cần sửa</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="font-size:0.9rem;font-weight:600;margin:1rem 0 0.5rem;">Thực thể số liệu & Thuật ngữ được bảo toàn:</h4>
+          <div id="protectedEntitiesBox" style="background:#f8fafc;padding:0.75rem;border-radius:8px;border:1px solid var(--border);"></div>
+        </div>
+
+        <!-- Tab 4: Quality & Diagnostics -->
+        <div class="tab-content" id="tabQuality">
+          <div class="diag-grid">
+            <div class="diag-item">
+              <div class="diag-label">Chất lượng ảnh tổng quát</div>
+              <div class="diag-val" id="diagQuality">GOOD</div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-label">Độ nét (Sharpness)</div>
+              <div class="diag-val" id="diagSharpness">0.0</div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-label">Độ tương phản (Contrast)</div>
+              <div class="diag-val" id="diagContrast">0.0</div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-label">Góc nghiêng (Skew angle)</div>
+              <div class="diag-val" id="diagSkew">0.0°</div>
+            </div>
+          </div>
+          <div style="font-size:0.82rem;background:#f8fafc;padding:0.75rem;border-radius:8px;border:1px solid var(--border);">
+            <strong>Chiến lược xử lý:</strong> <span id="diagCandidateSelected">original</span>
+            <br>
+            <span id="diagNotes" style="color:var(--text-muted);">Tự động chọn phiên bản ảnh tối ưu độ chính xác tiếng Việt.</span>
+          </div>
+        </div>
+
+        <!-- Tab 5: Raw JSON -->
+        <div class="tab-content" id="tabRaw">
+          <div class="text-toolbar">
+            <span style="font-size:0.8rem;color:var(--text-muted);">Phản hồi API trực tiếp:</span>
+            <button class="btn-secondary" onclick="copyJSON()">📋 Copy JSON</button>
+          </div>
+          <pre class="text-box" id="rawJsonBox" style="font-size:0.78rem;"></pre>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Đã sao chép vào bộ nhớ tạm!</div>
+
+  <script>
+    let currentFile = null;
+    let currentMode = "analyze";
+    let lastResult = null;
+
+    // Elements
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+    const selectedFileBar = document.getElementById("selectedFileBar");
+    const selectedThumb = document.getElementById("selectedThumb");
+    const selectedFileName = document.getElementById("selectedFileName");
+    const selectedFileSize = document.getElementById("selectedFileSize");
+    const clearFileBtn = document.getElementById("clearFileBtn");
+    const processBtn = document.getElementById("processBtn");
+    const workspaceGrid = document.getElementById("workspaceGrid");
+    const previewImg = document.getElementById("previewImg");
+    const bboxOverlay = document.getElementById("bboxOverlay");
+
+    // Drag and Drop
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+    dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      if (e.dataTransfer.files.length > 0) {
+        handleFileSelect(e.dataTransfer.files[0]);
+      }
+    });
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+      }
+    });
+    clearFileBtn.addEventListener("click", () => {
+      currentFile = null;
+      fileInput.value = "";
+      selectedFileBar.style.display = "none";
+      dropzone.style.display = "block";
+      workspaceGrid.style.display = "none";
+    });
+
+    function handleFileSelect(file) {
+      currentFile = file;
+      selectedFileName.textContent = file.name;
+      selectedFileSize.textContent = (file.size / 1024).toFixed(1) + " KB";
+      
+      // Thumbnail preview
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          selectedThumb.src = e.target.result;
+          previewImg.src = e.target.result;
+          previewImg.onload = () => drawBBoxes();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        selectedThumb.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3C/svg%3E";
+      }
+
+      dropzone.style.display = "none";
+      selectedFileBar.style.display = "flex";
+    }
+
+    // Load Sample Fixture
+    async function loadSample(fixtureName) {
+      try {
+        const resp = await fetch(`/static/fixtures/${fixtureName}`);
+        if (!resp.ok) {
+          // fallback to reading sample directly if needed
+          showToast("Đang tải dữ liệu mẫu...");
+        }
+        const blob = await resp.blob();
+        const file = new File([blob], fixtureName, { type: "image/png" });
+        handleFileSelect(file);
+      } catch (err) {
+        showToast("Không tìm thấy mẫu; vui lòng chọn file trên máy.");
+      }
+    }
+
+    // Set Execution Mode
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll(".segmented-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-mode") === mode);
+      });
+      const btnText = document.getElementById("btnText");
+      if (mode === "analyze") {
+        btnText.textContent = "Bắt đầu phân tích OCR";
+      } else {
+        btnText.textContent = "Chuyển đổi & Tải về " + mode;
+      }
+    }
+
+    // Switch Result Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+        const targets = ["tabText", "tabOrder", "tabVi", "tabQuality", "tabRaw"];
+        btn.classList.toggle("active", targets[idx] === tabId);
+      });
+      document.querySelectorAll(".tab-content").forEach(content => {
+        content.classList.toggle("active", content.id === tabId);
+      });
+    }
+
+    // Process Document
+    async function processDocument() {
+      if (!currentFile) {
+        showToast("Vui lòng chọn hoặc kéo thả file trước!");
+        return;
+      }
+
+      const taskType = document.getElementById("taskTypeSelect").value;
+      const formData = new FormData();
+      formData.append("file", currentFile);
+      formData.append("task_type", taskType);
+
+      const btnIcon = document.getElementById("btnIcon");
+      const btnText = document.getElementById("btnText");
+      btnIcon.innerHTML = '<span class="spinner"></span>';
+      btnText.textContent = "Đang xử lý...";
+      processBtn.disabled = true;
+
+      const startTime = performance.now();
+
+      try {
+        if (currentMode === "analyze") {
+          const resp = await fetch("/api/v1/analyze", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.detail || "Xử lý thất bại");
+          }
+
+          const data = await resp.json();
+          lastResult = data;
+          renderAnalysisResult(data, Math.round(performance.now() - startTime));
+        } else {
+          // Conversion endpoint: PDF / DOCX / XLSX
+          formData.append("output_format", currentMode);
+          const resp = await fetch("/api/v1/convert/image", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.detail || "Chuyển đổi thất bại");
+          }
+
+          const blob = await resp.blob();
+          const ext = currentMode.toLowerCase();
+          const downloadUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = downloadUrl;
+          a.download = currentFile.name.replace(/\.[^/.]+$/, "") + `_ocr.${ext}`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          showToast(`Đã xuất và tải file ${currentMode} thành công!`);
+        }
+      } catch (err) {
+        alert("Lỗi: " + err.message);
+      } finally {
+        btnIcon.textContent = "🚀";
+        btnText.textContent = currentMode === "analyze" ? "Bắt đầu phân tích OCR" : "Chuyển đổi & Tải về " + currentMode;
+        processBtn.disabled = false;
+      }
+    }
+
+    // Render Analysis Result
+    function renderAnalysisResult(data, durationMs) {
+      workspaceGrid.style.display = "grid";
+      const ext = data.extracted_data || {};
+
+      // Tab 1: Text
+      document.getElementById("statTime").textContent = `${data.processing_time_ms || durationMs} ms`;
+      const text = ext.text || ext.corrected_text || ext.raw_text || "";
+      document.getElementById("correctedTextBox").textContent = text;
+      document.getElementById("statWords").textContent = `${text.split(/\s+/).filter(Boolean).length} từ`;
+      
+      const candidate = ext.analysis_report?.A_document_information?.ocr_strategy?.selected_candidate || "original";
+      document.getElementById("statCandidate").textContent = candidate;
+
+      // Tab 2: Reading order blocks
+      const blockList = document.getElementById("blockList");
+      blockList.innerHTML = "";
+      const blocks = ext.document_structure?.blocks || ext.lines || [];
+      blocks.forEach((b, idx) => {
+        const item = document.createElement("div");
+        item.className = "block-item";
+        item.innerHTML = `
+          <div class="block-header">
+            <span class="block-idx">#${idx + 1}</span>
+            <span class="block-type">${b.type || "paragraph"}</span>
+            <span class="block-conf">${Math.round((b.confidence || 0.9) * 100)}%</span>
+          </div>
+          <div class="block-text">${b.text || ""}</div>
+        `;
+        item.addEventListener("mouseenter", () => highlightBBox(b.bounding_box));
+        item.addEventListener("mouseleave", () => drawBBoxes());
+        blockList.appendChild(item);
+      });
+
+      // Tab 3: Vietnamese corrections & entities
+      const corrections = ext.vietnamese_corrections || [];
+      const tbody = document.getElementById("correctionsTableBody");
+      tbody.innerHTML = "";
+      if (corrections.length > 0) {
+        corrections.forEach(c => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="correction-orig">${c.original}</td>
+            <td class="correction-fixed">${c.corrected}</td>
+            <td>${c.reason || "Sửa lỗi chính tả OCR"}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);">Không có lỗi dấu cần sửa hoặc tài liệu đã chuẩn</td></tr>';
+      }
+
+      // Protected entities
+      const entities = ext.protected_entities || [];
+      const entityBox = document.getElementById("protectedEntitiesBox");
+      entityBox.innerHTML = "";
+      if (entities.length > 0) {
+        entities.forEach(ent => {
+          const tag = document.createElement("span");
+          tag.className = "entity-tag";
+          tag.textContent = `${ent.token} (${ent.type})`;
+          entityBox.appendChild(tag);
+        });
+      } else {
+        entityBox.innerHTML = '<span style="color:var(--text-muted);font-size:0.8rem;">Không phát hiện thực thể đặc biệt (Mã số thuế, tiền, thuật ngữ CV...)</span>';
+      }
+
+      // Tab 4: Diagnostics
+      const rep = ext.analysis_report?.A_document_information || {};
+      const imgQual = rep.image_analysis?.image_quality_before || {};
+      const metrics = imgQual.metrics || {};
+      document.getElementById("diagQuality").textContent = imgQual.label || "GOOD";
+      document.getElementById("diagSharpness").textContent = (metrics.sharpness_laplacian_variance || 0).toFixed(1);
+      document.getElementById("diagContrast").textContent = (metrics.contrast_stddev_0_255 || 0).toFixed(1);
+      document.getElementById("diagSkew").textContent = `${(rep.image_analysis?.estimated_skew_degrees || 0).toFixed(1)}°`;
+      document.getElementById("diagCandidateSelected").textContent = candidate;
+
+      // Tab 5: Raw JSON
+      document.getElementById("rawJsonBox").textContent = JSON.stringify(data, null, 2);
+
+      // Draw bounding boxes on canvas
+      drawBBoxes();
+      switchTab("tabText");
+    }
+
+    // Draw Bounding Boxes Overlay
+    function drawBBoxes() {
+      const show = document.getElementById("toggleBBox").checked;
+      const canvas = bboxOverlay;
+      const img = previewImg;
+
+      canvas.width = img.clientWidth || img.naturalWidth;
+      canvas.height = img.clientHeight || img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!show || !lastResult || !img.naturalWidth) return;
+
+      const scaleX = canvas.width / img.naturalWidth;
+      const scaleY = canvas.height / img.naturalHeight;
+
+      const blocks = lastResult.extracted_data?.document_structure?.blocks || lastResult.extracted_data?.lines || [];
+      blocks.forEach((b, idx) => {
+        const box = b.bounding_box;
+        if (!box || box.length !== 4) return;
+        const x = box[0] * scaleX;
+        const y = box[1] * scaleY;
+        const w = (box[2] - box[0]) * scaleX;
+        const h = (box[3] - box[1]) * scaleY;
+
+        ctx.strokeStyle = "rgba(79, 70, 229, 0.85)";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, w, h);
+
+        ctx.fillStyle = "rgba(79, 70, 229, 0.15)";
+        ctx.fillRect(x, y, w, h);
+
+        // Index tag
+        ctx.fillStyle = "rgba(79, 70, 229, 0.9)";
+        ctx.fillRect(x, Math.max(0, y - 16), 20, 16);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 10px sans-serif";
+        ctx.fillText(String(idx + 1), x + 4, Math.max(0, y - 4));
+      });
+    }
+
+    function highlightBBox(box) {
+      if (!box || box.length !== 4) return;
+      const canvas = bboxOverlay;
+      const img = previewImg;
+      const ctx = canvas.getContext("2d");
+      drawBBoxes();
+
+      const scaleX = canvas.width / img.naturalWidth;
+      const scaleY = canvas.height / img.naturalHeight;
+      const x = box[0] * scaleX;
+      const y = box[1] * scaleY;
+      const w = (box[2] - box[0]) * scaleX;
+      const h = (box[3] - box[1]) * scaleY;
+
+      ctx.strokeStyle = "#ef4444";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillStyle = "rgba(239, 68, 68, 0.25)";
+      ctx.fillRect(x, y, w, h);
+    }
+
+    // Utility: Copy text & Toast
+    function copyText() {
+      const text = document.getElementById("correctedTextBox").textContent;
+      navigator.clipboard.writeText(text).then(() => showToast("Đã sao chép văn bản!"));
+    }
+    function copyJSON() {
+      const json = document.getElementById("rawJsonBox").textContent;
+      navigator.clipboard.writeText(json).then(() => showToast("Đã sao chép JSON!"));
+    }
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2500);
+    }
+  </script>
+</body>
+</html>

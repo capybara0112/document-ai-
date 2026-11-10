@@ -1,0 +1,2 @@
+sample_crops/line_0016.png	Hình thức thanh toán: Chuyển khoản / Tiền mặt
+sample_crops/line_0006.png	- Biến đổi ảnh và cắt thành ảnh âm bản

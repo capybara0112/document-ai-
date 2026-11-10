@@ -1,0 +1,20 @@
+sample_crops/line_0014.png	Số tài khoản: 19028374659012 tại Techcombank
+sample_crops/line_0011.png	ĐƠN VỊ BÁN HÀNG: CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ
+sample_crops/line_0018.png	Đơn vị tính: Chiếc, Số lượng: 02, Đơn giá: 25.500.000
+sample_crops/line_0012.png	Mã số thuế: 0102030405-001
+sample_crops/line_0015.png	Họ tên người mua hàng: Nguyễn Văn An
+sample_crops/line_0017.png	Tên hàng hóa: Máy tính xách tay ThinkPad T14 Gen 4
+sample_crops/line_0002.png	Thời gian làm bài: 30 phút
+sample_crops/line_0013.png	Địa chỉ: Số 123 Đường Giải Phóng, Quận Hai Bà Trưng, Hà Nội
+sample_crops/line_0022.png	Số tiền viết bằng chữ: Năm mươi sáu triệu một trăm nghìn đồng.
+sample_crops/line_0007.png	Câu 2 (5 điểm): Tách biên ảnh bằng phương pháp Canny
+sample_crops/line_0010.png	- Ấn phím 's' hoặc 'c' để lưu lại ảnh kết quả
+sample_crops/line_0003.png	Câu 1 (5 điểm): Đọc ảnh và thực hiện các thao tác sau
+sample_crops/line_0023.png	Người mua hàng ký và ghi rõ họ tên
+sample_crops/line_0005.png	trục x và trục y nhập vào từ bàn phím
+sample_crops/line_0020.png	Thuế suất GTGT: 10%, Tiền thuế GTGT: 5.100.000 VNĐ
+sample_crops/line_0008.png	- Tạo trackbar để lấy giá trị threshold1, threshold2
+sample_crops/line_0009.png	- Sử dụng bộ lọc Gaussian Blur làm mịn ảnh trước khi tách biên
+sample_crops/line_0001.png	KIỂM TRA GIỮA KỲ THỊ GIÁC MÁY TÍNH
+sample_crops/line_0004.png	- Thay đổi kích thước ảnh với hệ số tỉ lệ
+sample_crops/line_0021.png	Tổng cộng tiền thanh toán: 56.100.000 VNĐ

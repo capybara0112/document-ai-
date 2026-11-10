@@ -1,0 +1,126 @@
+Architecture:
+  Backbone:
+    name: PPLCNetV3
+    scale: 0.95
+  Head:
+    head_list:
+    - CTCHead:
+        Head:
+          fc_decay: 1.0e-05
+        Neck:
+          depth: 2
+          dims: 120
+          hidden_dims: 120
+          name: svtr
+          use_guide: true
+    - NRTRHead:
+        max_text_length: 120
+        nrtr_dim: 384
+    name: MultiHead
+  Transform: null
+  algorithm: SVTR_LCNet
+  model_type: rec
+Eval:
+  dataset:
+    data_dir: ./training/datasets/
+    label_file_list:
+    - ./training/datasets/val.txt
+    name: SimpleDataSet
+    transforms:
+    - DecodeImage:
+        channel_first: false
+        img_mode: BGR
+    - MultiLabelEncode: null
+    - RecResizeImg:
+        image_shape:
+        - 3
+        - 48
+        - 320
+    - KeepKeys:
+        keep_keys:
+        - image
+        - label_ctc
+        - label_gt
+        - length
+        - valid_ratio
+  loader:
+    batch_size_per_card: 64
+    drop_last: false
+    num_workers: 2
+    shuffle: false
+Global:
+  cal_metric_during_train: true
+  character_dict_path: training/datasets/vietnamese_dict.txt
+  checkpoints: null
+  d2s_train_image_shape:
+  - 3
+  - 48
+  - 320
+  debug: false
+  epoch_num: 3
+  eval_batch_step:
+  - 0
+  - 50
+  infer_img: training/datasets/sample_crops/line_0001.png
+  infer_mode: false
+  log_smooth_window: 20
+  max_text_length: 120
+  pretrained_model: null
+  print_batch_step: 10
+  save_epoch_step: 5
+  save_inference_dir: ./output/rec_vietnamese_v6/inference
+  save_model_dir: ./output/rec_vietnamese_v6/
+  save_res_path: ./output/rec_vietnamese_v6/predicts_rec.txt
+  use_gpu: false
+  use_space_char: true
+  use_visualdl: false
+Loss:
+  loss_config_list:
+  - CTCLoss: null
+  - NRTRLoss: null
+  name: MultiLoss
+Metric:
+  main_indicator: acc
+  name: RecMetric
+Optimizer:
+  beta1: 0.9
+  beta2: 0.999
+  lr:
+    learning_rate: 0.0005
+    name: Cosine
+    warmup_epoch: 5
+  name: Adam
+  regularizer:
+    factor: 3.0e-05
+    name: L2
+PostProcess:
+  name: CTCLabelDecode
+Train:
+  dataset:
+    data_dir: ./training/datasets/
+    label_file_list:
+    - ./training/datasets/train.txt
+    name: SimpleDataSet
+    transforms:
+    - DecodeImage:
+        channel_first: false
+        img_mode: BGR
+    - RecAug: null
+    - MultiLabelEncode: null
+    - RecResizeImg:
+        image_shape:
+        - 3
+        - 48
+        - 320
+    - KeepKeys:
+        keep_keys:
+        - image
+        - label_ctc
+        - label_gt
+        - length
+        - valid_ratio
+  loader:
+    batch_size_per_card: 64
+    drop_last: true
+    num_workers: 4
+    shuffle: true

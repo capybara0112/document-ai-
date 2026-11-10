@@ -1,0 +1,15 @@
+# Môi trường ảo Python (Virtual Environments)
+.venv/
+.venv311/
+venv/
+ENV/
+env/
+
+# Cache và file biên dịch tạm của Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Thư mục chứa log/xuất bản phẩm tạm (nếu muốn bỏ qua)
+log/*.log

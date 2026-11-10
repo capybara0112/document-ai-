@@ -1,0 +1,12 @@
+{
+  "total_input_pairs": 24,
+  "valid_samples": 24,
+  "skipped_samples": 0,
+  "train_count": 20,
+  "val_count": 2,
+  "test_count": 2,
+  "unique_characters_observed": 116,
+  "unrecognized_characters_count": 0,
+  "unrecognized_characters": [],
+  "output_directory": "training\\datasets"
+}

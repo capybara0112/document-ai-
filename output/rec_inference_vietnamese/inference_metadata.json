@@ -1,0 +1,18 @@
+{
+  "export_timestamp": "2026-11-07T03:22:44.390142Z",
+  "model_type": "recognition",
+  "algorithm": "SVTR_LCNet",
+  "input_shape": [
+    3,
+    48,
+    320
+  ],
+  "source_checkpoint": "output\\rec_vietnamese_v6\\best_accuracy",
+  "source_config": "training\\configs\\rec_vietnamese_v6.yml",
+  "inference_files": [
+    "inference.pdiparams",
+    "inference.pdiparams.info",
+    "inference.pdmodel",
+    "vietnamese_dict.txt"
+  ]
+}

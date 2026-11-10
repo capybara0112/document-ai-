@@ -1,0 +1,4 @@
+BÁO CÁO KỸ THUẬT XỬ LÝ ẢNH
+1. Khử nhiễu bằng bộ lọc Gaussian và Bilateral.
+2. Tách biên bằng thuật toán Canny với hai ngưỡng.
+3. Sử dụng trackbar để điều chỉnh tham số ngưỡng.
